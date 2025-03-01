@@ -6,9 +6,19 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        name: Generate and upload kiota client
         steps:
         - name: Checkout repository
           uses: actions/checkout@v2
-        - name: Generate artifact
+        - name: Get changed files
+          id: changed-files
+          uses: tj-actions/changed-files@v45.0.7
+          with:
+            files: apis/*.{json,yaml,yml}
+        - name: List changed files
+          env:
+            ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
           run: |
-            echo "Hello, world!" > artifact.txt
+            for file in ${ALL_CHANGED_FILES}; do
+                echo "$file was changed"
+            done
