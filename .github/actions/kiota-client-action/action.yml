@@ -1,14 +1,14 @@
-name: 'Generate client'
-description: 'Greet someone and record the time'
+name: "Generate client"
+description: "Greet someone and record the time"
 inputs:
   language:
     required: true
-    description: 'language to generate a client in. options are: csharp, go, java, php, python, ruby, shell, swift, typescript'
+    description: "language to generate a client in. options are: csharp, go, java, php, python, ruby, shell, swift, typescript"
   openapi:
     required: true
-    description: 'path to the openapi file to generate a client from'
+    description: "path to the openapi file to generate a client from"
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - shell: bash
       run: echo "generating client for ${{ inputs.language }} from ${{ inputs.openapi }}"
@@ -19,7 +19,11 @@ runs:
     - name: Generate client
       shell: bash
       run: kiota generate --language ${{ inputs.language }} --openapi ${{ inputs.openapi }} --output generated_client
+    - name: get artifact name
+      run: file=apis/openapi.yaml; filename=$(basename "$file" .${file##*.}); client_name=$(echo ${{ inputs.language }}-client-$filename) >> $GITHUB_OUTPUT
+      shell: bash
+      id: get-artifact-name
     - uses: actions/upload-artifact@v4
       with:
         path: generated_client
-        name: ${{ inputs.language }}-client
+        name: ${{ steps.get-artifact-name.outputs.client_name }}
