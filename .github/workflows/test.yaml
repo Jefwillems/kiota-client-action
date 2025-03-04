@@ -32,6 +32,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: Checkout
+      - name: log files in this job
+        run: echo ${{ matrix.files }}
       - name: generate client
         id: generate-client
         uses: ./.github/actions/kiota-client-action
