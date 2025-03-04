@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Find changed openapi specs
     outputs:
-      openapi_specs: ${{ steps.changed-files.outputs.all_changed_files }}
+      openapi_specs: ${{ steps.changed-files.outputs.all_changed_and_modified_files }}
     steps:
       - uses: actions/checkout@v4
         with:
