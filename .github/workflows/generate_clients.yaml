@@ -1,3 +1,4 @@
+name: Find changed specs and generate language specific clients
 on:
   push:
     branches:
