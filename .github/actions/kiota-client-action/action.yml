@@ -12,11 +12,7 @@ runs:
   steps:
     - uses: docker://mcr.microsoft.com/openapi/kiota:latest
       with:
-        args:
-          - 'generate'
-          - '--language ${{ inputs.language }}'
-          - '--openapi ${{ inputs.openapi }}'
-          - '--output /github/workspace/generated_client'
+        args: 'generate --language ${{ inputs.language }} --openapi ${{ inputs.openapi }} --output /github/workspace/generated_client'
     - uses: actions/upload-artifact@v4
       with:
         path: /github/workspace/generated_client
