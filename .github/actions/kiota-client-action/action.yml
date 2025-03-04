@@ -15,8 +15,8 @@ runs:
       uses: microsoft/setup-kiota@v0.5.0
     - name: Generate client
       shell: bash
-      run: kiota generate --language ${{ inputs.language }} --openapi ${{ inputs.openapi }} --output /github/workspace/generated_client
+      run: kiota generate --language ${{ inputs.language }} --openapi ${{ inputs.openapi }} --output generated_client
     - uses: actions/upload-artifact@v4
       with:
-        path: /github/workspace/generated_client
+        path: generated_client
         
