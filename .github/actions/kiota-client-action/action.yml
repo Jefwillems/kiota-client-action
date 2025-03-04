@@ -20,7 +20,7 @@ runs:
       shell: bash
       run: kiota generate --language ${{ inputs.language }} --openapi ${{ inputs.openapi }} --output generated_client
     - name: get artifact name
-      run: file=apis/openapi.yaml; filename=$(basename "$file" .${file##*.}); client_name=$(echo ${{ inputs.language }}-client-$filename) >> $GITHUB_OUTPUT
+      run: file=apis/openapi.yaml; filename=$(basename "$file" .${file##*.}); echo client_name=${{ inputs.language }}-client-$filename >> $GITHUB_OUTPUT
       shell: bash
       id: get-artifact-name
     - uses: actions/upload-artifact@v4
