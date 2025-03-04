@@ -27,16 +27,19 @@ jobs:
     strategy:
       matrix:
         files: ${{ fromJSON(needs.find_changed_openapi_specs.outputs.openapi_specs) }}
+        languages:
+          - 'java'
+          - 'typescript'
+          - 'csharp'
+          - 'python'
       max-parallel: 2
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
         name: Checkout
-      - name: log files in this job
-        run: echo ${{ matrix.files }}
       - name: generate client
         id: generate-client
         uses: ./.github/actions/kiota-client-action
         with:
-          language: 'java'
+          language: ${{ matrix.languages}}
           openapi: ${{ matrix.files }}
