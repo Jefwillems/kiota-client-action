@@ -38,5 +38,5 @@ jobs:
         id: generate-client
         uses: ./.github/actions/kiota-client-action
         with:
-          language: 'csharp'
+          language: 'java'
           openapi: ${{ matrix.files }}
