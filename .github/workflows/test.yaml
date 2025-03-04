@@ -24,6 +24,7 @@ jobs:
     name: A job to say hello
     needs: 
       - find_changed_openapi_specs
+    if: ${{ fromJSON(needs.find_changed_openapi_specs.outputs.openapi_specs).length > 0 }}
     strategy:
       matrix:
         files: ${{ fromJSON(needs.find_changed_openapi_specs.outputs.openapi_specs) }}
