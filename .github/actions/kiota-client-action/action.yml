@@ -1,15 +1,23 @@
-name: 'Hello World'
+name: 'Generate client'
 description: 'Greet someone and record the time'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  language:
     required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+    description: 'language to generate a client in. options are: csharp, go, java, php, python, ruby, shell, swift, typescript'
+  openapi:
+    required: true
+    description: 'path to the openapi file to generate a client from'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  args:
-    - ${{ inputs.who-to-greet }}
+  using: 'composite'
+  steps:
+    - uses: docker://mcr.microsoft.com/openapi/kiota:latest
+      with:
+        args:
+          - 'generate'
+          - '--language ${{ inputs.language }}'
+          - '--openapi ${{ inputs.openapi }}'
+          - '--output /github/workspace/generated_client'
+    - uses: actions/upload-artifact@v4
+      with:
+        path: /github/workspace/generated_client
+        
