@@ -32,7 +32,7 @@ jobs:
           - 'typescript'
           - 'csharp'
           - 'python'
-      max-parallel: 2
+      max-parallel: 4
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
