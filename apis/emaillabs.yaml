@@ -1,1 +1,349 @@
-{"openapi":"3.0.0","info":{"title":"EmailLabs API","version":"v2.1.1.0"},"tags":[{"name":"Emails","description":"Email API mainly allows you to send emails to all over the world. You can also create or delete email templates, get clicks, opens and statuses on your emails and more.\n     *\n     *               There are two ways to send emails using our API:\n     *               - transactional email API that allows you to send emails to a single or an array of email addresses\n     *               - email campaigns that allows you to send emails to created group through API or account panel"}],"servers":[{"url":"https://api.emaillabs.io","description":"Production server"}],"security":[{"APIKeyHeader":[],"APPKeyHeader":[]}],"components":{"securitySchemes":{"APIKeyHeader":{"type":"apiKey","name":"Authorization","in":"header"}}},"paths":{"/v2.1/email":{"post":{"tags":["Emails"],"summary":"Send emails","description":"Send new email through transactional API which means that you can send email to a single email address or an array of email addresses. You can send the message to a maximum of 200 recipients. The entire query should not exceed 15 MB, and should not exceed 10 000 elements. If you want to send email to a group created through Create group method please use Send email campaign. Link tracking is enabled by default, you can disable it by adding a header `{\"X-TRACKING-OFF\":1}`","operationId":"SendEmails","requestBody":{"required":true,"content":{"application/json":{"schema":{"description":"Object passed when sending emails. ","required":["subject","smtpAccount","content","from","to"],"properties":{"subject":{"description":"The subject of the message.","type":"string","maxLength":128,"minLength":2},"smtpAccount":{"description":"The smtp account name the email will be sent from.","type":"string"},"tags":{"description":"The values to tag the message with. Tags can be non-unique.","type":"array","items":{"type":"string"}},"content":{"description":"The body of the message. If you choose templateId html and text can be omitted.","properties":{"html":{"description":"The html of the message.","type":"string"},"text":{"description":"The text of the message.","type":"string"},"templateId":{"description":"The unique ID of the template you can find it using Get templates list method.","type":"string"}},"type":"object"},"bcc":{"description":"The array of recipients who will receive a blind carbon copy of your email.","type":"array","items":{"properties":{"email":{"description":"The email address of the recipient.","type":"string"},"name":{"description":"The name of the recipient.","type":"string","maxLength":64,"minLength":2}},"type":"object"}},"cc":{"description":"The array of recipients who will receive a copy of your email.","type":"array","items":{"properties":{"email":{"description":"The email address of the recipient.","type":"string"},"name":{"description":"The name of the recipient.","type":"string","maxLength":64,"minLength":2}},"type":"object"}},"from":{"description":"The details of sender.","properties":{"email":{"description":"The email address of the sender.","type":"string"},"name":{"description":"The name of the sender.","type":"string","maxLength":64,"minLength":2}},"type":"object"},"replyTo":{"description":"The details of who the recipient can reply to.","properties":{"email":{"description":"The email address to reply to.","type":"string"},"name":{"description":"The name of the email address to reply to.","type":"string","maxLength":64,"minLength":2}},"type":"object"},"headers":{"description":"The extra key/value pair of the headers you can add to the message. Property name can contain max of 100 signs.","type":"object","additionalProperties":true},"globalVars":{"description":"The extra variables you can use in your e-mial template. You can find more information on how to use this feature <a href=\"#section/Dynamic-e-mail-content\">in this section</a>.","type":"object","additionalProperties":true},"to":{"description":"The details of the recipients.","type":"array","items":{"properties":{"email":{"description":"The email address of the recipient.","type":"string"},"name":{"description":"The name of the recipient.","type":"string","maxLength":64,"minLength":2},"messageId":{"description":"The unique ID of the message.","type":"string"},"vars":{"description":"The extra key/value pair of variables you can add and use in the message. You can find more information on how to use this feature <a href=\"#section/Dynamic-e-mail-content\">in this section</a>.","type":"object"}},"type":"object"},"maxItems":200},"attachments":{"description":"The details of the attachments. The entire query should not exceed 15 MB.","type":"array","items":{"properties":{"fileName":{"description":"Name of the file.","type":"string"},"fileMime":{"description":"Type of file.","type":"string"},"fileContent":{"description":"File content in encoding base64.","type":"string"},"inline":{"description":"Field used for image attachments. It indicates whether the image should be placed inline or not.","type":"bool","default":false}},"type":"object"}}},"type":"object"}}}},"responses":{"200":{"description":"Request was successfully processed","content":{"application/json":{"schema":{"properties":{"meta":{"description":"Additional data","required":["numberOfErrors","numberOfData","status","uniqId"],"properties":{"numberOfErrors":{"description":"Number of items in errors section, 0 if section not exists","type":"integer"},"numberOfData":{"description":"Number of items in data section, 0 if section not exists","type":"integer"},"status":{"description":"Request HTTP status","type":"integer"},"uniqId":{"description":"Unique identifier of a request - it allows us to find your request in the case of any troubles","type":"string"}},"type":"object"},"data":{"type":"array","items":{"properties":{"subject":{"type":"string"},"smtpAccount":{"description":"SMTP account","type":"string"},"tags":{"type":"array","items":{"type":"string"}},"to":{"type":"array","items":{"properties":{"email":{"type":"string"},"name":{"type":"string"},"messageId":{"type":"string"}},"type":"object"}},"from":{"properties":{"email":{"type":"string"},"name":{"type":"string"}},"type":"object"},"status":{"type":"string"},"statusTime":{"type":"number"},"statusDesc":{"type":"string"},"allStatuses":{"type":"array","items":{"properties":{"status":{"type":"string"},"statusTime":{"type":"integer"},"statusDesc":{"type":"string"}},"type":"object"}}},"type":"object"}}},"type":"object"}}}},"207":{"description":"Some of request body items were not processed due to validation errors","content":{"application/json":{"schema":{"properties":{"data":{"description":"Simple data object","type":"array","items":{}},"meta":{"description":"Additional data","required":["numberOfErrors","numberOfData","status","uniqId"],"properties":{"$ref":"#/paths/~1v2.1~1email/post/responses/200/content/application~1json/schema/properties/meta/properties"},"type":"object"},"errors":{"type":"array","items":{"description":"Errors list","required":["title","message","code"],"properties":{"title":{"description":"General error name","type":"string"},"message":{"description":"Error details","type":"string"},"code":{"description":"Error code in our system","type":"string"}},"type":"object"}}},"type":"object"}}}},"400":{"description":"Bad Request - request was not processed due to validation errors","content":{"application/json":{"schema":{"properties":{"meta":{"description":"Additional data","required":["numberOfErrors","numberOfData","status","uniqId"],"properties":{"$ref":"#/paths/~1v2.1~1email/post/responses/200/content/application~1json/schema/properties/meta/properties"},"type":"object"},"errors":{"type":"array","items":{"description":"Errors list","required":["title","message","code"],"properties":{"$ref":"#/paths/~1v2.1~1email/post/responses/207/content/application~1json/schema/properties/errors/items/properties"},"type":"object"}}},"type":"object"}}}},"404":{"description":"Request was successfully processed but no results were returned","content":{"application/json":{"schema":{"description":"Additional data","required":["numberOfErrors","numberOfData","status","uniqId"],"properties":{"$ref":"#/paths/~1v2.1~1email/post/responses/200/content/application~1json/schema/properties/meta/properties"},"type":"object"}}}},"500":{"description":"Request was not processed due to server error","content":{"application/json":{"schema":{"properties":{"meta":{"description":"Additional data","required":["numberOfErrors","numberOfData","status","uniqId"],"properties":{"$ref":"#/paths/~1v2.1~1email/post/responses/200/content/application~1json/schema/properties/meta/properties"},"type":"object"}},"type":"object"}}}}}}}}}
+openapi: 3.0.0
+info:
+  title: EmailLabs API
+  version: v2.1.1.0
+tags:
+  - name: Emails
+    description: |-
+      Email API mainly allows you to send emails to all over the world. You can also create or delete email templates, get clicks, opens and statuses on your emails and more.
+           *
+           *               There are two ways to send emails using our API:
+           *               - transactional email API that allows you to send emails to a single or an array of email addresses
+           *               - email campaigns that allows you to send emails to created group through API or account panel
+servers:
+  - url: https://api.emaillabs.io
+    description: Production server
+security:
+  - APIKeyHeader: []
+    APPKeyHeader: []
+components:
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      name: Authorization
+      in: header
+paths:
+  /v2.1/email:
+    post:
+      tags:
+        - Emails
+      summary: Send emails
+      description: Send new email through transactional API which means that you can send email to a single email address or an array of email addresses. You can send the message to a maximum of 200 recipients. The entire query should not exceed 15 MB, and should not exceed 10 000 elements. If you want to send email to a group created through Create group method please use Send email campaign. Link tracking is enabled by default, you can disable it by adding a header `{"X-TRACKING-OFF":1}`
+      operationId: SendEmails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              description: 'Object passed when sending emails. '
+              required:
+                - subject
+                - smtpAccount
+                - content
+                - from
+                - to
+              properties:
+                subject:
+                  description: The subject of the message.
+                  type: string
+                  maxLength: 128
+                  minLength: 2
+                smtpAccount:
+                  description: The smtp account name the email will be sent from.
+                  type: string
+                tags:
+                  description: The values to tag the message with. Tags can be non-unique.
+                  type: array
+                  items:
+                    type: string
+                content:
+                  description: The body of the message. If you choose templateId html and text can be omitted.
+                  properties:
+                    html:
+                      description: The html of the message.
+                      type: string
+                    text:
+                      description: The text of the message.
+                      type: string
+                    templateId:
+                      description: The unique ID of the template you can find it using Get templates list method.
+                      type: string
+                  type: object
+                bcc:
+                  description: The array of recipients who will receive a blind carbon copy of your email.
+                  type: array
+                  items:
+                    properties:
+                      email:
+                        description: The email address of the recipient.
+                        type: string
+                      name:
+                        description: The name of the recipient.
+                        type: string
+                        maxLength: 64
+                        minLength: 2
+                    type: object
+                cc:
+                  description: The array of recipients who will receive a copy of your email.
+                  type: array
+                  items:
+                    properties:
+                      email:
+                        description: The email address of the recipient.
+                        type: string
+                      name:
+                        description: The name of the recipient.
+                        type: string
+                        maxLength: 64
+                        minLength: 2
+                    type: object
+                from:
+                  description: The details of sender.
+                  properties:
+                    email:
+                      description: The email address of the sender.
+                      type: string
+                    name:
+                      description: The name of the sender.
+                      type: string
+                      maxLength: 64
+                      minLength: 2
+                  type: object
+                replyTo:
+                  description: The details of who the recipient can reply to.
+                  properties:
+                    email:
+                      description: The email address to reply to.
+                      type: string
+                    name:
+                      description: The name of the email address to reply to.
+                      type: string
+                      maxLength: 64
+                      minLength: 2
+                  type: object
+                headers:
+                  description: The extra key/value pair of the headers you can add to the message. Property name can contain max of 100 signs.
+                  type: object
+                  additionalProperties: true
+                globalVars:
+                  description: The extra variables you can use in your e-mial template. You can find more information on how to use this feature <a href="#section/Dynamic-e-mail-content">in this section</a>.
+                  type: object
+                  additionalProperties: true
+                to:
+                  description: The details of the recipients.
+                  type: array
+                  items:
+                    properties:
+                      email:
+                        description: The email address of the recipient.
+                        type: string
+                      name:
+                        description: The name of the recipient.
+                        type: string
+                        maxLength: 64
+                        minLength: 2
+                      messageId:
+                        description: The unique ID of the message.
+                        type: string
+                      vars:
+                        description: The extra key/value pair of variables you can add and use in the message. You can find more information on how to use this feature <a href="#section/Dynamic-e-mail-content">in this section</a>.
+                        type: object
+                    type: object
+                  maxItems: 200
+                attachments:
+                  description: The details of the attachments. The entire query should not exceed 15 MB.
+                  type: array
+                  items:
+                    properties:
+                      fileName:
+                        description: Name of the file.
+                        type: string
+                      fileMime:
+                        description: Type of file.
+                        type: string
+                      fileContent:
+                        description: File content in encoding base64.
+                        type: string
+                      inline:
+                        description: Field used for image attachments. It indicates whether the image should be placed inline or not.
+                        type: bool
+                        default: false
+                    type: object
+              type: object
+      responses:
+        '200':
+          description: Request was successfully processed
+          content:
+            application/json:
+              schema:
+                properties:
+                  meta:
+                    description: Additional data
+                    required:
+                      - numberOfErrors
+                      - numberOfData
+                      - status
+                      - uniqId
+                    properties:
+                      numberOfErrors:
+                        description: Number of items in errors section, 0 if section not exists
+                        type: integer
+                      numberOfData:
+                        description: Number of items in data section, 0 if section not exists
+                        type: integer
+                      status:
+                        description: Request HTTP status
+                        type: integer
+                      uniqId:
+                        description: Unique identifier of a request - it allows us to find your request in the case of any troubles
+                        type: string
+                    type: object
+                  data:
+                    type: array
+                    items:
+                      properties:
+                        subject:
+                          type: string
+                        smtpAccount:
+                          description: SMTP account
+                          type: string
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                        to:
+                          type: array
+                          items:
+                            properties:
+                              email:
+                                type: string
+                              name:
+                                type: string
+                              messageId:
+                                type: string
+                            type: object
+                        from:
+                          properties:
+                            email:
+                              type: string
+                            name:
+                              type: string
+                          type: object
+                        status:
+                          type: string
+                        statusTime:
+                          type: number
+                        statusDesc:
+                          type: string
+                        allStatuses:
+                          type: array
+                          items:
+                            properties:
+                              status:
+                                type: string
+                              statusTime:
+                                type: integer
+                              statusDesc:
+                                type: string
+                            type: object
+                      type: object
+                type: object
+        '207':
+          description: Some of request body items were not processed due to validation errors
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    description: Simple data object
+                    type: array
+                    items: {}
+                  meta:
+                    description: Additional data
+                    required:
+                      - numberOfErrors
+                      - numberOfData
+                      - status
+                      - uniqId
+                    properties:
+                      $ref: '#/paths/~1v2.1~1email/post/responses/200/content/application~1json/schema/properties/meta/properties'
+                    type: object
+                  errors:
+                    type: array
+                    items:
+                      description: Errors list
+                      required:
+                        - title
+                        - message
+                        - code
+                      properties:
+                        title:
+                          description: General error name
+                          type: string
+                        message:
+                          description: Error details
+                          type: string
+                        code:
+                          description: Error code in our system
+                          type: string
+                      type: object
+                type: object
+        '400':
+          description: Bad Request - request was not processed due to validation errors
+          content:
+            application/json:
+              schema:
+                properties:
+                  meta:
+                    description: Additional data
+                    required:
+                      - numberOfErrors
+                      - numberOfData
+                      - status
+                      - uniqId
+                    properties:
+                      $ref: '#/paths/~1v2.1~1email/post/responses/200/content/application~1json/schema/properties/meta/properties'
+                    type: object
+                  errors:
+                    type: array
+                    items:
+                      description: Errors list
+                      required:
+                        - title
+                        - message
+                        - code
+                      properties:
+                        $ref: '#/paths/~1v2.1~1email/post/responses/207/content/application~1json/schema/properties/errors/items/properties'
+                      type: object
+                type: object
+        '404':
+          description: Request was successfully processed but no results were returned
+          content:
+            application/json:
+              schema:
+                description: Additional data
+                required:
+                  - numberOfErrors
+                  - numberOfData
+                  - status
+                  - uniqId
+                properties:
+                  $ref: '#/paths/~1v2.1~1email/post/responses/200/content/application~1json/schema/properties/meta/properties'
+                type: object
+        '500':
+          description: Request was not processed due to server error
+          content:
+            application/json:
+              schema:
+                properties:
+                  meta:
+                    description: Additional data
+                    required:
+                      - numberOfErrors
+                      - numberOfData
+                      - status
+                      - uniqId
+                    properties:
+                      $ref: '#/paths/~1v2.1~1email/post/responses/200/content/application~1json/schema/properties/meta/properties'
+                    type: object
+                type: object
